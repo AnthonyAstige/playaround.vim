@@ -1,21 +1,4 @@
 let s:playbuf = 0
-function! s:Run(command, filename)
-	" Go to play buffer & unlock it
-	execute ":buffer " . s:playbuf
-	:setlocal modifiable
-
-	" Get blank buffer with timestamp only
-	:normal ggdG
-	:put =strftime(\"%c\")
-	:normal ggddG
-
-	" Show command exection in window
-	:execute ":read !" . a:command . " " . a:filename
-
-	" Lock buffer again
-	:setlocal nomodifiable
-endfunction
-
 function! s:Play()
 	let l:filename = expand('%:p')
 	let l:extension = tolower(expand('%:e'))
@@ -49,6 +32,19 @@ function! s:Play()
 		:setlocal noswapfile
 	endif
 
-	:call s:Run(l:cmd, l:filename)
+	" Go to play buffer & unlock it
+	execute ":buffer " . s:playbuf
+	:setlocal modifiable
+
+	" Get blank buffer with timestamp only
+	:normal ggdG
+	:put =strftime(\"%c\")
+	:normal ggddG
+
+	" Show command exection in window
+	:execute ":read !" . l:cmd. " " . l:filename
+
+	" Lock buffer again
+	:setlocal nomodifiable
 endfunction
 :autocmd BufWritePost * :call s:Play()
