@@ -16,6 +16,9 @@ function! s:Play()
 		return
 	endif
 
+	" Construct full command
+	let l:fullcommand= l:cmd . " " . l:filename
+
 	" Open a new play buffer if needed
 	if 0 == s:playbuf
 		" Open new window & new buffer
@@ -35,13 +38,16 @@ function! s:Play()
 	execute ":buffer " . s:playbuf
 	:setlocal modifiable
 
-	" Make blank buffer with timestamp only
+	" Make blank buffer with timestamp & command runnign only
 	:normal ggdG
+	:put =l:fullcommand
 	:put =strftime(\"%c\")
+	let l:blankline=""
+	:put =l:blankline
 	:normal ggddG
 
 	" Show command exection in window
-	:execute ":read !" . l:cmd. " " . l:filename
+	:execute ":read !" . l:fullcommand
 
 	" Lock buffer again
 	:setlocal nomodifiable
@@ -58,10 +64,10 @@ function! s:MakePlayground()
 		let s:playbuf = 0
 		echo "Playground destroyed"
 	else
-		echo "All saves will run / play in playground if file type is supported"
 		augroup Playground
 			autocmd BufWritePost * :call s:Play()
 		augroup END
+		execute "w"
 	endif
 endfunction
 
