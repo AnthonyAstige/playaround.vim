@@ -3,6 +3,7 @@ function! s:Play()
 	let l:filename = expand('%:p')
 	let l:extension = tolower(expand('%:e'))
 
+	" Figure out command
 	let l:cmd = ""
 	if "js" == l:extension
 		let l:cmd = "node"
@@ -15,6 +16,7 @@ function! s:Play()
 		return
 	endif
 
+	" Open a new play buffer if needed
 	if 0 == s:playbuf
 		" Open new window & new buffer
 		:execute ":botright vnew"
@@ -22,11 +24,8 @@ function! s:Play()
 		" Save buffer reference
 		let s:playbuf = bufnr("$")
 
-		"Buffer - Not listed in buffers, not modifiable
+		" Unlisted & sratch
 		:setlocal nobuflisted
-		:setlocal nomodifiable
-
-		"Buffer - Scratch
 		:setlocal buftype=nofile
 		:setlocal bufhidden=hide
 		:setlocal noswapfile
@@ -36,7 +35,7 @@ function! s:Play()
 	execute ":buffer " . s:playbuf
 	:setlocal modifiable
 
-	" Get blank buffer with timestamp only
+	" Make blank buffer with timestamp only
 	:normal ggdG
 	:put =strftime(\"%c\")
 	:normal ggddG
