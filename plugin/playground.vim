@@ -46,4 +46,17 @@ function! s:Play()
 	" Lock buffer again
 	:setlocal nomodifiable
 endfunction
-:autocmd BufWritePost * :call s:Play()
+
+function! s:MakePlayground()
+	if exists('#Playground')
+		echo "Playground destroyed"
+		autocmd! Playground
+	else
+		echo "Will display playground on save!"
+		augroup Playground
+			autocmd BufWritePost * :call s:Play()
+		augroup END
+	endif
+endfunction
+
+command! Playground :call s:MakePlayground()
