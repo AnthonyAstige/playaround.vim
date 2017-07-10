@@ -2,6 +2,7 @@ let s:playbuf = 0
 function! s:Play()
 	let l:filename = expand('%:p')
 	let l:extension = tolower(expand('%:e'))
+	let save_pos = getpos(".")
 
 	" Figure out command
 	let l:cmd = ""
@@ -51,6 +52,9 @@ function! s:Play()
 
 	" Lock buffer again
 	:setlocal nomodifiable
+
+	" Restore cursor position (above code moves it)
+	call setpos('.', save_pos)
 endfunction
 
 function! s:MakePlayground()
