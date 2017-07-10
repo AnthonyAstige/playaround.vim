@@ -48,9 +48,15 @@ function! s:Play()
 endfunction
 
 function! s:MakePlayground()
-	if exists('#Playground')
+	if exists('#Playground#BufWritePost')
+		if s:playbuf
+			execute "bdelete " . s:playbuf
+		endif
+		augroup Playground
+			autocmd!
+		augroup END
+		let s:playbuf = 0
 		echo "Playground destroyed"
-		autocmd! Playground
 	else
 		echo "Will display playground on save!"
 		augroup Playground
@@ -59,4 +65,4 @@ function! s:MakePlayground()
 	endif
 endfunction
 
-command! Playground :call s:MakePlayground()
+command! PlaygroundToggle :call s:MakePlayground()
