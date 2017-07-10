@@ -58,11 +58,11 @@ function! s:MakePlayground()
 		let s:playbuf = 0
 		echo "Playground destroyed"
 	else
-		echo "Will display playground on save!"
+		echo "All saves will run / play in playground if file type is supported"
 		augroup Playground
 			autocmd BufWritePost * :call s:Play()
 		augroup END
 	endif
 endfunction
 
-command! PlaygroundToggle :call s:MakePlayground()
+command! PlayaroundToggle :call s:MakePlayground()
