@@ -38,7 +38,7 @@ function! s:Play()
 	execute ":buffer " . s:playbuf
 	:setlocal modifiable
 
-	" Make blank buffer with timestamp & command runnign only
+	" Make blank buffer with timestamp & command running only
 	:normal ggdG
 	:put =l:fullcommand
 	:put =strftime(\"%c\")
