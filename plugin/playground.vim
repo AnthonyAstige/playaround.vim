@@ -1,5 +1,4 @@
 let s:playbuf = 0
-:set switchbuf+=useopen
 function! s:Run(command, filename)
 	" Go to play buffer & unlock it
 	execute ":buffer " . s:playbuf
