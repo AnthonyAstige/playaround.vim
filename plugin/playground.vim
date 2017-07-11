@@ -2,7 +2,6 @@ let s:playbuf = 0
 function! s:Play()
 	let l:filename = expand('%:p')
 	let l:extension = tolower(expand('%:e'))
-	let save_pos = getpos(".")
 
 	" Figure out command
 	let l:cmd = ""
@@ -20,24 +19,26 @@ function! s:Play()
 	" Construct full command
 	let l:fullcommand= l:cmd . " " . l:filename
 
-	" Open a new play buffer if needed
-	if 0 == s:playbuf
-		" Open new window & new buffer
-		:execute ":botright vnew"
-
-		" Save buffer reference
-		let s:playbuf = bufnr("$")
-
-		" Unlisted & sratch
-		:setlocal nobuflisted
-		:setlocal buftype=nofile
-		:setlocal bufhidden=hide
-		:setlocal noswapfile
+	" Destroy any existing buffer and start all over
+	" * This bandaid is not ideal , but I was having trouble restoring the
+	" cursor position to rows/columns that didn't exist in play buffer
+	if 0 != s:playbuf
+		execute "bdelete " . s:playbuf
 	endif
 
-	" Go to play buffer & unlock it
+	"" Open a new play buffer if needed
+	" Open new window & new buffer
+	:execute ":botright vnew"
+	" Save buffer reference
+	let s:playbuf = bufnr("$")
+	" Unlisted & sratch
+	:setlocal nobuflisted
+	:setlocal buftype=nofile
+	:setlocal bufhidden=hide
+	:setlocal noswapfile
+
+	" Go to play buffer
 	execute ":buffer " . s:playbuf
-	:setlocal modifiable
 
 	" Make blank buffer with timestamp & command running only
 	:normal ggdG
@@ -50,11 +51,8 @@ function! s:Play()
 	" Show command exection in window
 	:execute ":read !" . l:fullcommand
 
-	" Lock buffer again
+	" Lock buffer
 	:setlocal nomodifiable
-
-	" Restore cursor position (above code moves it)
-	call setpos('.', save_pos)
 endfunction
 
 function! s:MakePlayground()
