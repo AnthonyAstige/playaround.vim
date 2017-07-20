@@ -28,8 +28,9 @@ function! s:Play()
 
 	"" Open a new play buffer if needed
 	" Open new window & new buffer
-	:execute ":botright vnew"
+	:execute ":below new"
 	" Save buffer reference
+	:execute ":resize 10"
 	let s:playbuf = bufnr("$")
 	" Unlisted & sratch
 	:setlocal nobuflisted
@@ -50,6 +51,9 @@ function! s:Play()
 
 	" Show command exection in window
 	:execute ":read !" . l:fullcommand
+
+	" Move to bottom of buffer
+	:normal G
 
 	" Lock buffer
 	:setlocal nomodifiable
